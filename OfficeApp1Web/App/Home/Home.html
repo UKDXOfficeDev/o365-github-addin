@@ -28,6 +28,9 @@
             <p data-bind="text: userDisplayName"></p>
             <img width="64" height="64" data-bind="attr:{src: avatarUrl}" />
             <img src="../../Images/301.GIF" data-bind="visible: loading"/>
+            <button data-bind="click: insertSummary">Insert Summary</button>
+            <button data-bind="click: insertContributors">Insert Contributors</button>
+            <button data-bind="click: insertCommits">Insert Commits</button>
         </div>
     </div>
     <div id="content-main">
@@ -49,16 +52,17 @@
 
             <div id="summary" data-bind="visible:showSummary">
                 <table>
-                    <tr><td>created</td><td data-bind="text: createdOn"></td></tr>
-                    <tr><td>clone</td><td data-bind="text: cloneUrl"></td></tr>
-                    <tr><td>desccription</td><td data-bind="text: description"></td></tr>
-                    <tr><td>stars</td><td data-bind="text: stargazersCount"></td></tr>
-                    <tr><td>watch</td><td data-bind="text: watchersCount"></td></tr>
+                    <tr><td data-bind="text: repoNameText"></td><td data-bind="text: repoName"></td></tr>
+                    <tr><td data-bind="text: createdText"></td><td data-bind="text: createdOn"></td></tr>
+                    <tr><td data-bind="text: cloneText"></td><td data-bind="text: cloneUrl"></td></tr>
+                    <tr><td data-bind="text: descriptionText"></td><td data-bind="text: description"></td></tr>
+                    <tr><td data-bind="text: starsText"></td><td data-bind="text: stargazersCount"></td></tr>
+                    <tr><td data-bind="text: watchText"></td><td data-bind="text: watchersCount"></td></tr>
                 </table>
 
                 <table data-bind="visible:showSummary">
                     <thead>
-                        <tr><th>Contributor</th><th>Commit Count</th></tr>
+                        <tr><th data-bind="text: contributorText"></th><th data-bind="text: commitCountText"></th></tr>
                     </thead>
                     <tbody data-bind="foreach: contributors">
                         <tr>

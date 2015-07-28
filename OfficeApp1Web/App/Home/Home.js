@@ -8,12 +8,20 @@
         vm;
 
     var MainViewModel = function () {
+        this.createdText = "created";
+        this.cloneText = "clone";
+        this.descriptionText = "description";
+        this.starsText = "stars";
+        this.watchText = "watch";
+        this.commitCountText = "Commit Count";
+        this.contributorText = "Contributor";
+        this.repoNameText = "repo name";
+        this.repoName = ko.observable();
         this.items = ko.observableArray();
         this.selectedRepo = ko.observable();
         this.commits = ko.observableArray();
         this.contributors = ko.observableArray();
-        this.userName = ko.observable();
-        this.password = ko.observable();
+        this.userName = ko.observable("peted70");
         this.userData = ko.observable();
         this.createdOn = ko.observable();
         this.cloneUrl = ko.observable();;
@@ -26,6 +34,66 @@
         this.showMain = ko.observable(false);
         this.showSummary = ko.observable(false);
         this.loading = ko.observable(false);
+        this.insertContributors = function () {
+            var contributorsTab = new Office.TableData();
+            contributorsTab.headers = [this.contributorText, this.commitCountText];
+            for (var i = 0; i < this.contributors().length; i++) {
+                var item = this.contributors()[i];
+                contributorsTab.rows.push([item.loginName, item.commitCount.toString()]);
+            }
+            Office.context.document.setSelectedDataAsync(contributorsTab,
+                { coercionType: "table", asyncContext: this },
+                function (result) {
+                    if (result.status === Office.AsyncResultStatus.Failed) {
+                        app.showNotification("There's a problem!",
+                            "unable to add table");
+                    }
+                });
+        };
+        this.insertCommits = function () {
+            if (Office.context.document.setSelectedDataAsync) {
+                var commitsTab = new Office.TableData();
+                commitsTab.headers = ["Committer", "Message"];
+                for (var i = 0; i < this.commits().length; i++) {
+                    var item = this.commits()[i];
+                    commitsTab.rows.push([item.committerName, item.commitMessage]);
+                }
+
+                Office.context.document.setSelectedDataAsync(commitsTab,
+                    { coercionType: "table", asyncContext: this/*, tableOptions: {headerRow:false}*/ },
+                    function (result) {
+                        if (result.status === Office.AsyncResultStatus.Failed) {
+                            app.showNotification("There's a problem!",
+                                "unable to add table");
+                        } else {
+                        }
+                    });
+            } else {
+                app.showNotification('Content insertion not supported');
+            }
+        };
+        this.insertSummary = function () {
+            if (Office.context.document.setSelectedDataAsync) {
+                var summaryTab = [[this.repoNameText, this.repoName()],
+                                  [this.createdText, this.createdOn()],
+                                  [this.cloneText, this.cloneUrl()],
+                                  [this.descriptionText, this.description()],
+                                  [this.starsText, this.stargazersCount().toString()],
+                                  [this.watchText, this.watchersCount().toString()]];
+
+                Office.context.document.setSelectedDataAsync(summaryTab,
+                    { coercionType: "matrix", asyncContext: this/*, tableOptions: {headerRow:false}*/ },
+                    function (result) {
+                        if (result.status === Office.AsyncResultStatus.Failed) {
+                            app.showNotification("There's a problem!",
+                                "unable to add table");
+                        } else {
+                        }
+                    });
+            } else {
+                app.showNotification('Content insertion not supported');
+            }
+        };
         this.login = function (formElement) {
             github = new Github({
                 username: this.userName(),
@@ -64,8 +132,9 @@
             // populate the repo info...
             var repository = this.selectedRepo();
             var that = this;
-            var repo = github.getRepo("peted70", repository.name);
+            var repo = github.getRepo(this.userName(), repository.name);
             this.createdOn(repository.created_at);
+            this.repoName(repository.name);
             this.cloneUrl(repository.clone_url);
             this.description(repository.description);
             this.stargazersCount(repository.stargazers_count);
@@ -79,7 +148,8 @@
                 var contributorData = data.map(function (c) {
                     return {
                         avatarUrl: c.author.avatar_url,
-                        commitCount: c.total
+                        commitCount: c.total,
+                        loginName: c.author.login
                     };
                 })
                 that.contributors(contributorData);
