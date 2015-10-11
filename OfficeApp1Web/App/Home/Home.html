@@ -6,7 +6,9 @@
     <title></title>
     <script src="../../Scripts/jquery-1.9.1.js" type="text/javascript"></script>
 
-    <link href="../../Content/Office.css" rel="stylesheet" type="text/css" />
+    <!--<link href="../../Content/Office.css" rel="stylesheet" type="text/css" />-->
+    <link href="../../css/fabric.css" rel="stylesheet" />
+    <link href="../../css/fabric.components.css" rel="stylesheet" />
     <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js" type="text/javascript"></script>
 
     <!-- To enable offline debugging using a local reference to Office.js, use:                        -->
@@ -22,69 +24,161 @@
     <script src="../../Scripts/knockout-3.3.0.debug.js"></script>
 </head>
 <body>
-    <div id="content-header">
+    <div id="content-header" class="ms-bgColor-blue">
         <div class="padding">
-            <h1>Welcome</h1>
-            <p data-bind="text: userDisplayName"></p>
-            <img width="64" height="64" data-bind="attr:{src: avatarUrl}" />
-            <img src="../../Images/301.GIF" data-bind="visible: loading"/>
-            <button data-bind="click: insertSummary">Insert Summary</button>
-            <button data-bind="click: insertContributors">Insert Contributors</button>
-            <button data-bind="click: insertCommits">Insert Commits</button>
+            <div class="ms-Grid">
+                <div class="ms-Grid-row">
+                    <div class="ms-Spinner ms-Spinner-circle"></div>
+                    <div class="ms-Grid-col">
+                        <img style="height:60px;" alt="" src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" />
+                    </div>
+                    <div class="ms-Grid-col ms-u-sm8" style="margin:4px;">
+                        <h3 class="ms-fontSize-xl ms-fontColor-white" style="display:inline;">Welcome</h3>
+                        <p class="ms-fontSize-xs ms-fontColor-white" style="display:inline;" data-bind="text: userLoginHint"></p>
+                    </div>
+                </div>
+             </div>
         </div>
     </div>
     <div id="content-main">
         <div class="padding">
             <div id="login-border" data-bind="visible: showLogin">
                 <form data-bind="submit: login">
-                    <input id="userName" type="text" data-bind="value: userName"/>|
-                    <input id="password" type="password" data-bind="value: password" />
-                    <button type="submit">login</button>
+                    <div class="ms-Grid">
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm1" style="margin:4px;">
+                                <input class="ms-TextField-field ms-TextField--placeholder" id="userName" type="text" data-bind="value: userName" />
+                            </div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm1" style="margin:4px;">
+                                <input class="ms-TextField-field" id="password" type="password" data-bind="value: password" />
+                            </div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm1" style="margin:4px;">
+                                <button class="ms-Button ms-Button-label" type="submit">login</button>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
+            <div id="content-loggedin" data-bind="visible: !showLogin()">
+                <div>
+                    <img width="72" data-bind="attr:{src: avatarUrl},visible: !showLogin()" />
+                </div>
 
-            <select data-bind="options: items,
+                <select class="ms-Dropdown" data-bind="options: items,
                     visible:showMain,
                     optionsText: 'name',
                     value: selectedRepo,
                     optionsCaption: 'Choose a repo...',
                     event: { change: selectionChanged }"></select>
 
-            <div id="summary" data-bind="visible:showSummary">
-                <table>
-                    <tr><td data-bind="text: repoNameText"></td><td data-bind="text: repoName"></td></tr>
-                    <tr><td data-bind="text: createdText"></td><td data-bind="text: createdOn"></td></tr>
-                    <tr><td data-bind="text: cloneText"></td><td data-bind="text: cloneUrl"></td></tr>
-                    <tr><td data-bind="text: descriptionText"></td><td data-bind="text: description"></td></tr>
-                    <tr><td data-bind="text: starsText"></td><td data-bind="text: stargazersCount"></td></tr>
-                    <tr><td data-bind="text: watchText"></td><td data-bind="text: watchersCount"></td></tr>
-                </table>
+                <!--<div id="navigation">
+                    <ul class="ms-Pivot">
+                        <li class="ms-Pivot-link is-selected">Summary</li>
+                        <li class="ms-Pivot-link">Contributors</li>
+                        <li class="ms-Pivot-link">Commits</li>
+                        <li class="ms-Pivot-link ms-Pivot-link--overflow">
+                            <i class="ms-Pivot-ellipsis ms-Icon ms-Icon--ellipsis"></i>
+                        </li>
+                    </ul>
+                </div>-->
 
-                <table data-bind="visible:showSummary">
-                    <thead>
-                        <tr><th data-bind="text: contributorText"></th><th data-bind="text: commitCountText"></th></tr>
-                    </thead>
-                    <tbody data-bind="foreach: contributors">
-                        <tr>
-                            <td>
-                                <img width="28" height="28" data-bind="attr:{src: avatarUrl}" />
-                            </td>
-                            <td data-bind="text: commitCount"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div data-bind="visible:showSummary">
+                    <p class="ms-font-l ms-fontWeight-semibold">Summary</p>
+                    <hr />
+                    <div class="ms-Grid ms-font-m-plus" id="summary" data-bind="visible:showSummary">
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: repoNameText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: repoName"></div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: createdText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: createdOn"></div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: cloneText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: cloneUrl"></div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: descriptionText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: description"></div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: starsText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: stargazersCount"></div>
+                        </div>
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: watchText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: watchersCount"></div>
+                        </div>
+                    </div>
+                    <hr />
+                    <center data-bind="visible:showSummary">
+                        <button class="ms-Button" data-bind="click: insertSummary">
+                            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                            <span class="ms-Button-label">Insert Summary</span>
+                            <span class="ms-Button-description">Insert Project Summary into document</span>
+                        </button>
+                    </center>
+                    <hr />
+                </div>
 
-                <table data-bind="visible:showSummary">
-                    <thead>
-                        <tr><th>Committer</th><th>Message</th></tr>
-                    </thead>
-                    <tbody data-bind="foreach: commits">
-                        <tr>
-                            <td data-bind="text: committerName"></td>
-                            <td data-bind="text: commitMessage"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="summary" data-bind="visible:showSummary">
+                    <p class="ms-font-l  ms-fontWeight-semibold">Contributors</p>
+                    <hr />
+                    <div class="ms-Grid ms-font-m-plus" data-bind="visible:showSummary">
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4" data-bind="text: contributorText"></div>
+                            <div class="ms-Grid-col ms-u-sm8" data-bind="text: commitCountText"></div>
+                        </div>
+                        <div data-bind="foreach: contributors">
+                            <div class="ms-Grid-row">
+                                <div class="ms-Grid-col ms-u-sm4">
+                                    <img width="28" height="28" style="display:inline;" data-bind="attr:{src: avatarUrl}" />
+                                </div>
+                                <div class="ms-Grid-col ms-u-sm8" data-bind="text: commitCount"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <center data-bind="visible:showSummary">
+                        <button class="ms-Button" data-bind="click: insertContributors">
+                            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                            <span class="ms-Button-label">Insert Contributors</span>
+                            <span class="ms-Button-description">Insert Contributors into document</span>
+                        </button>
+                    </center>
+                    <hr />
+                </div>
+
+                <div id="commits" data-bind="visible:showSummary">
+                    <p class="ms-font-l  ms-fontWeight-semibold">Commits</p>
+                    <hr />
+                    <div class="ms-Grid ms-font-m-plus" data-bind="visible:showSummary">
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm4">Comitter</div>
+                            <div class="ms-Grid-col ms-u-sm8">Message</div>
+                        </div>
+                        <div data-bind="foreach: commits">
+                            <div class="ms-Grid-row">
+                                <div class="ms-Grid-col ms-u-sm4" data-bind="text: committerName"></div>
+                                <div class="ms-Grid-col ms-u-sm8" data-bind="text: commitMessage"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <center data-bind="visible:showSummary">
+                        <button class="ms-Button" data-bind="click: insertCommits">
+                            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                            <span class="ms-Button-label">Insert Commits</span>
+                            <span class="ms-Button-description">Insert Commits into document</span>
+                        </button>
+                    </center>
+                    <hr />
+                </div>
             </div>
         </div>
     </div>

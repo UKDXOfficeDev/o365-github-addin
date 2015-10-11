@@ -8,27 +8,29 @@
         vm;
 
     var MainViewModel = function () {
-        this.createdText = "created";
-        this.cloneText = "clone";
-        this.descriptionText = "description";
-        this.starsText = "stars";
-        this.watchText = "watch";
+        this.createdText = "Created";
+        this.cloneText = "Clone";
+        this.descriptionText = "Description";
+        this.starsText = "Stars";
+        this.watchText = "Watch";
         this.commitCountText = "Commit Count";
         this.contributorText = "Contributor";
-        this.repoNameText = "repo name";
+        this.repoNameText = "Repo Name";
         this.repoName = ko.observable();
         this.items = ko.observableArray();
         this.selectedRepo = ko.observable();
         this.commits = ko.observableArray();
         this.contributors = ko.observableArray();
         this.userName = ko.observable("peted70");
+        this.password = ko.observable();
         this.userData = ko.observable();
         this.createdOn = ko.observable();
         this.cloneUrl = ko.observable();;
         this.description = ko.observable();;
         this.stargazersCount = ko.observable();;
         this.watchersCount = ko.observable();;
-        this.userDisplayName = ko.observable('Login with your Github username and password to access repository data');
+        this.userDisplayName = ko.observable();
+        this.userLoginHint = ko.observable('Login with your Github username and password to access repository data');
         this.avatarUrl = ko.observable();
         this.showLogin = ko.observable(true);
         this.showMain = ko.observable(false);
@@ -112,6 +114,7 @@
                 that.showMain(true);
                 that.userData = res;
                 that.userDisplayName(res.name);
+                that.userLoginHint(res.name);
                 that.avatarUrl(res.avatar_url);
             });
             user.repos(function (err, repos) {

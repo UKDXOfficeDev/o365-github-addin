@@ -1,20 +1,26 @@
 ﻿/* Common app styling */
+#login-border {
+    margin:8px;
+}
+
+button, input {
+    margin: 4px;
+}
 
 #content-header {
-    background: #2a8dd4;
     color: #fff;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 200px;
+    height: 80px;
     overflow: hidden; /* Disable scrollbars for header */
 }
 
 #content-main {
     background: #fff;
     position: fixed;
-    top: 200px; /* Same value as #content-header's height */
+    top: 80px; /* Same value as #content-header's height */
     left: 0;
     right: 0;
     bottom: 0;
