@@ -9,6 +9,9 @@
   <Description DefaultValue="Github Connector for Office"/>
   <Capabilities>
     <Capability Name="Document" />
+    <Capability Name="Project" />
+    <Capability Name="Presentation" />
+    <Capability Name="Workbook" />
   </Capabilities>
   <DefaultSettings>
     <SourceLocation DefaultValue="~remoteAppUrl/App/Home/Home.html" />
